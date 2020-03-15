@@ -65,7 +65,9 @@ class Agent:
 
                     if total_reward > best_total_reward:
                         best_total_reward = total_reward
-                        self.model.save_model("/Users/franzbewerunge/Documents/Other/dqn.h5")
+                        if not os.path.exists('models'):
+                            os.makedirs('models')
+                        self.model.save_model('models/policy_weights.h5')
 
                     print("Episode: ", episode+1, " Total Reward: ", total_reward, " Epsilon:", self.epsilon)
                     break
@@ -106,7 +108,7 @@ class Agent:
         self.model.train(states, q_values)
 
     def play(self, num_episodes, render=True):
-        self.model.load_model("/Users/franzbewerunge/Documents/Other/dqn.h5")
+        self.model.load_model('models/policy_weights.h5')
         for episode in range(num_episodes):
             state = self.env.reset()
             state = np.reshape(state, (1, state.shape[0]))
@@ -123,5 +125,5 @@ class Agent:
 if __name__ == "__main__":
     env = gym.make("CartPole-v1")
     agent = Agent(env)
-    agent.train(num_episodes=200)
+    agent.train(num_episodes=2)
     agent.play(10)
